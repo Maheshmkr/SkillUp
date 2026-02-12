@@ -73,7 +73,7 @@ export default function Dashboard() {
                       <div>
                         <div className="flex justify-between items-start mb-2">
                           <h3 className="text-xl font-bold group-hover:text-primary transition-colors">Advanced Web Development: Mastery</h3>
-                          <span className="text-xs font-medium bg-secondary px-2.5 py-1 rounded-full">Unit 4 of 12</span>
+                          <span className="text-xs font-medium bg-secondary px-2.5 py-1 rounded-full whitespace-nowrap">Unit 4 of 12</span>
                         </div>
                         <p className="text-muted-foreground text-sm mb-4">Next up: Mastering CSS Grid & Flexbox Layouts</p>
                         <div className="space-y-2 mb-6">
@@ -137,7 +137,7 @@ export default function Dashboard() {
               </section>
 
               {/* Recommended */}
-              <section>
+              {/* <section>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold flex items-center gap-2">
                     <Sparkles className="size-5 text-primary" /> Recommended for You
@@ -182,7 +182,7 @@ export default function Dashboard() {
                     </div>
                   ))}
                 </div>
-              </section>
+              </section> */}
             </div>
 
             {/* Right Column */}
@@ -191,7 +191,7 @@ export default function Dashboard() {
               <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="font-bold">Upcoming</h3>
-                  <button className="text-primary text-xs font-bold uppercase tracking-wider">Settings</button>
+                  {/* <button className="text-primary text-xs font-bold uppercase tracking-wider">Settings</button> */}
                 </div>
                 <div className="space-y-5">
                   {[
@@ -210,9 +210,9 @@ export default function Dashboard() {
                     </div>
                   ))}
                 </div>
-                <button className="w-full mt-6 py-3 border-2 border-dashed border-border rounded-xl text-xs font-bold text-muted-foreground hover:border-primary hover:text-primary transition-all">
+                {/* <button className="w-full mt-6 py-3 border-2 border-dashed border-border rounded-xl text-xs font-bold text-muted-foreground hover:border-primary hover:text-primary transition-all">
                   + Add Custom Task
-                </button>
+                </button> */}
               </div>
 
               {/* Achievements */}
@@ -241,7 +241,7 @@ export default function Dashboard() {
               </div>
 
               {/* Study Groups */}
-              <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
+              {/* <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
                 <h3 className="font-bold mb-4">Study Groups</h3>
                 <div className="space-y-4">
                   {[
@@ -260,7 +260,7 @@ export default function Dashboard() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

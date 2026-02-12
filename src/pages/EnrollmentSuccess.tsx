@@ -71,7 +71,7 @@ export default function EnrollmentSuccess() {
                     Start Learning
                   </Link>
                   <Link
-                    to="/dashboard"
+                    to="/"
                     className="flex items-center justify-center rounded-lg h-12 px-6 bg-secondary hover:bg-secondary/80 text-foreground font-semibold transition-all"
                   >
                     View Dashboard

@@ -1,11 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { GraduationCap, Compass, PlayCircle, Users, Bookmark, LayoutDashboard, User, Settings } from "lucide-react";
+import { GraduationCap, Compass, PlayCircle, Users, Bookmark, LayoutDashboard, User, LogOut } from "lucide-react";
 
 const mainNav = [
-  { title: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
-  { title: "Explore", to: "/", icon: Compass },
-  { title: "My Learning", to: "/dashboard", icon: PlayCircle },
-  { title: "Profile", to: "/dashboard", icon: User },
+  { title: "Dashboard", to: "/", icon: LayoutDashboard },
+  { title: "Explore", to: "/explore", icon: Compass },
+  { title: "My Learning", to: "/my-learning", icon: PlayCircle },
+  { title: "Profile", to: "/profile", icon: User },
 ];
 
 export function AppSidebar() {
@@ -60,9 +60,9 @@ export function AppSidebar() {
             <p className="text-sm font-bold truncate">Alex Morgan</p>
             <p className="text-[10px] text-muted-foreground truncate">Premium Student</p>
           </div>
-          <button className="text-muted-foreground hover:text-primary">
-            <Settings className="size-5" />
-          </button>
+          <Link to="/login" className="text-muted-foreground hover:text-primary">
+            <LogOut className="size-5" />
+          </Link>
         </div>
       </div>
     </aside>

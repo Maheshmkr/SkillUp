@@ -3,7 +3,7 @@ import { MainLayout } from "@/components/MainLayout";
 import { CourseCard } from "@/components/CourseCard";
 import { courses } from "@/data/courses";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-
+import { Link } from "react-router-dom";
 const categories = ["All Courses", "Development", "Business", "Design"];
 const difficulties = ["Beginner", "Intermediate", "Advanced"];
 const tabs = ["Trending", "Newest", "Popular"];

@@ -18,7 +18,11 @@ const modules = [
     count: 4,
     open: true,
   },
-  { title: "Module 2: Design Foundations", lessons: [], count: 8, open: false },
+  { title: "Module 2: Design Foundations", lessons: [
+      { title: "2.1 Introduction", type: "Video", duration: "05:00", status: "playing" },
+      { title: "2.2 How to use", type: "Video", duration: "12:30", status: "locked" },
+      { title: "2.3 Setup in your Window", type: "Article", duration: "10 min", status: "locked" },
+  ], count: 8, open: true },
   { title: "Module 3: Advanced Prototyping", lessons: [], count: 10, open: false },
 ];
 
@@ -34,7 +38,7 @@ export default function LearningInterface() {
       {/* Top Nav */}
       <header className="h-16 border-b border-border bg-card flex items-center justify-between px-6 sticky top-0 z-30">
         <div className="flex items-center gap-4">
-          <Link to="/dashboard" className="flex items-center gap-2 text-primary">
+          <Link to="/course/:id" className="flex items-center gap-2 text-primary">
             <ArrowLeft className="size-5" />
             <span className="hidden md:inline font-medium">Dashboard</span>
           </Link>
