@@ -33,7 +33,7 @@ export default function CourseApprovals() {
             setLoading(false);
         }
     };
-
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
     const handleApprove = async (courseId) => {
         if (window.confirm("Approve this course for publication?")) {
             try {
@@ -152,7 +152,7 @@ export default function CourseApprovals() {
                         {selectedCourse && (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
                                 <div className="md:col-span-2 space-y-6">
-                                    <div className="aspect-video bg-secondary rounded-xl overflow-hidden bg-cover bg-center" style={{ backgroundImage: `url(${selectedCourse.thumbnail})` }} />
+                                    <div className="aspect-video bg-secondary rounded-xl overflow-hidden bg-cover bg-center" style={{ backgroundImage: `url(${backendUrl}${selectedCourse.thumbnail})` }} />
                                     <div>
                                         <h2 className="text-2xl font-bold mb-2">{selectedCourse.title}</h2>
                                         <p className="text-muted-foreground">{selectedCourse.description}</p>

@@ -188,6 +188,7 @@ export default function LearnerCoursePreview() {
             </div>
         );
     }
+    const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
     // --- RENDER: BEFORE ENROLL (Marketing Page) ---
     return (
@@ -244,7 +245,7 @@ export default function LearnerCoursePreview() {
                     <div className="hidden md:block w-80 relative">
                         <div className="absolute top-0 right-0 w-full bg-card text-foreground rounded-2xl p-1 shadow-2xl border border-border">
                             <div className="relative aspect-video rounded-xl overflow-hidden mb-4 group cursor-pointer bg-black">
-                                <img src={course.thumbnail || "/placeholder-course.jpg"} className="w-full h-full object-cover opacity-80" alt="Thumbnail" />
+                                <img src={`${backendUrl}${course.thumbnail}`} className="w-full h-full object-cover opacity-80" alt="Thumbnail" />
                                 <div className="absolute inset-0 flex items-center justify-center">
                                     <Play className="size-16 fill-white text-white opacity-80 group-hover:scale-110 transition-transform" />
                                 </div>
