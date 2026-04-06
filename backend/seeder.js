@@ -85,20 +85,9 @@ const importData = async () => {
                 description: courseData.description,
             };
 
-            // Diversify demo data
-            if (i === 0) {
-                courseDocs.status = 'Published';
-                courseDocs.students = 1250;
-            } else if (i === 1) {
-                courseDocs.status = 'Draft';
-                courseDocs.students = 0;
-            } else if (i === 2) {
-                courseDocs.status = 'Pending Review';
-                courseDocs.students = 0;
-            } else if (i === 3) {
-                courseDocs.status = 'Published';
-                courseDocs.students = 850;
-            }
+            // Set all courses to Published by default for the demo
+            courseDocs.status = 'Published';
+            courseDocs.students = courseData.students || Math.floor(Math.random() * 1000) + 100;
 
             const createdCourse = await Course.create(courseDocs);
 
