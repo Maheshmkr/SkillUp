@@ -2,6 +2,9 @@ const asyncHandler = require('express-async-handler');
 const Course = require('../models/Course');
 const Module = require('../models/Module');
 const Lesson = require('../models/Lesson');
+const User = require('../models/User');
+const Review = require('../models/Review');
+const Enrollment = require('../models/Enrollment');
 
 // @desc    Get all courses for logged-in instructor
 // @route   GET /api/instructor/courses
@@ -239,7 +242,6 @@ const getInstructorReviews = asyncHandler(async (req, res) => {
     const courseIds = courses.map(c => c._id);
 
     // 2. Fetch all reviews for these courses
-    const Review = require('../models/Review');
     const reviews = await Review.find({ courseId: { $in: courseIds } })
         .populate('userId', 'name avatar')
         .sort('-createdAt')
@@ -266,8 +268,6 @@ const getInstructorReviews = asyncHandler(async (req, res) => {
 // @route   GET /api/instructor/enrollments
 // @access  Private/Instructor
 const getInstructorEnrollments = asyncHandler(async (req, res) => {
-    const Enrollment = require('../models/Enrollment');
-    
     // 1. Get all courses owned by this instructor
     const courses = await Course.find({ instructorId: req.user._id }).select('_id title');
     const courseIds = courses.map(c => c._id);
