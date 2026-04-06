@@ -15,16 +15,19 @@ const { protect } = require('../middleware/authMiddleware');
 // All routes require authentication
 router.use(protect);
 
-router.route('/reviews').get(getInstructorReviews); // MUST be before /:id
-router.route('/enrollments').get(getInstructorEnrollments);
-router.route('/').get(getInstructorCourses).post(createInstructorCourse);
+// 1. Static Routes (Must be BEFORE parameterized routes /:id)
+router.get('/reviews', getInstructorReviews);
+router.get('/enrollments', getInstructorEnrollments);
+router.get('/', getInstructorCourses);
 
+// 2. Parameterized Routes
 router
     .route('/:id')
     .get(getInstructorCourse)
     .put(updateInstructorCourse)
     .delete(deleteInstructorCourse);
 
+router.post('/', createInstructorCourse);
 router.post('/:id/submit', submitCourseForReview);
 
 module.exports = router;

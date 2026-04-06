@@ -19,6 +19,13 @@ const getInstructorCourses = asyncHandler(async (req, res) => {
 // @access  Private/Instructor
 const getInstructorCourse = asyncHandler(async (req, res) => {
     try {
+        // Validate that req.params.id is a valid MongoDB ObjectId
+        // This prevents 500 errors if a static route is accidentally matched here
+        if (!req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+            res.status(404);
+            throw new Error(`Invalid course ID format: ${req.params.id}`);
+        }
+
         const course = await Course.findById(req.params.id);
 
         if (!course) {
