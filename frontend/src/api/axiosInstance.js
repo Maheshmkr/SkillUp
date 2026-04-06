@@ -1,9 +1,10 @@
 import axios from 'axios';
 
-const API_URL = '/api';
-
+// Prioritize VITE_API_URL, then derived VITE_BACKEND_URL, then localhost
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-export const BACKEND_URL = BASE_URL.replace(/\/api$/, '');
+
+// BACKEND_URL is the root (without /api) used for static assets like images
+export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || BASE_URL.replace(/\/api$/, '');
 
 const axiosInstance = axios.create({
     baseURL: BASE_URL,
