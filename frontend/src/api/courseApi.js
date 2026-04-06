@@ -49,6 +49,16 @@ export const submitCourseForReview = async (id) => {
     return response.data;
 };
 
+export const getInstructorEnrollments = async () => {
+    const response = await axiosInstance.get('/instructor/courses/enrollments');
+    return response.data;
+};
+
+export const getInstructorReviews = async () => {
+    const response = await axiosInstance.get('/instructor/courses/reviews');
+    return response.data;
+};
+
 // ============================================
 // ADMIN COURSE APIs
 // ============================================

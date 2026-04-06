@@ -83,14 +83,15 @@ export default function InstructorCourseWizard() {
 
     // Auto-calculate "Course Includes" based on curriculum
     React.useEffect(() => {
+        if (!courseData?.modules) return;
         const totalDurationInSeconds = courseData.modules.reduce((acc, mod) => {
-            return acc + mod.lessons.reduce((subAcc, lesson) => {
+            return acc + (mod?.lessons?.reduce((subAcc, lesson) => {
                 if (lesson.type === 'video' && lesson.duration) {
                     const [min, sec] = lesson.duration.split(':').map(Number);
                     return subAcc + (min * 60) + (sec || 0);
                 }
                 return subAcc;
-            }, 0);
+            }, 0) || 0);
         }, 0);
 
         const hours = Math.floor(totalDurationInSeconds / 3600);

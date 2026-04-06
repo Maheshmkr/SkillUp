@@ -1,14 +1,40 @@
 import { AdminLayout } from "@/layouts/AdminLayout";
-import { Users, BookOpen, ShieldCheck, CircleAlert, ArrowUpRight, CircleCheck, CircleX } from "lucide-react";
+import { Users, BookOpen, ShieldCheck, ArrowUpRight, CircleAlert } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getAdminStats, getPendingCourses, approveCourse, rejectCourse } from "@/api/adminApi";
 
 export default function AdminDashboard() {
+    const queryClient = useQueryClient();
+
+    const { data: stats, isLoading: loadingStats } = useQuery({
+        queryKey: ['admin-stats'],
+        queryFn: getAdminStats
+    });
+
+    const { data: pendingCourses, isLoading: loadingPending } = useQuery({
+        queryKey: ['pending-courses'],
+        queryFn: getPendingCourses
+    });
+
+    const approveMutation = useMutation({
+        mutationFn: approveCourse,
+        onSuccess: () => queryClient.invalidateQueries(['pending-courses', 'admin-stats'])
+    });
+
+    const rejectMutation = useMutation({
+        mutationFn: (id) => rejectCourse(id, "Course does not meet platform standards."),
+        onSuccess: () => queryClient.invalidateQueries(['pending-courses', 'admin-stats'])
+    });
+
     const kpiData = [
-        { title: "Total Users", value: "8,540", change: "+120 this week", icon: Users, color: "text-blue-500", bg: "bg-blue-500/10" },
-        { title: "Active Instructors", value: "142", change: "+5 this month", icon: ShieldCheck, color: "text-purple-500", bg: "bg-purple-500/10" },
-        { title: "Total Courses", value: "340", change: "+12 pending approval", icon: BookOpen, color: "text-green-500", bg: "bg-green-500/10" },
-        { title: "Pending Approvals", value: "12", change: "Requires attention", icon: CircleAlert, color: "text-orange-500", bg: "bg-orange-500/10" },
+        { title: "Total Users", value: stats?.totalUsers || "0", change: "Registered learners", icon: Users, color: "text-blue-500", bg: "bg-blue-500/10" },
+        { title: "Active Instructors", value: stats?.activeInstructors || "0", change: "Verified teachers", icon: ShieldCheck, color: "text-purple-500", bg: "bg-purple-500/10" },
+        { title: "Total Courses", value: stats?.totalCourses || "0", change: "Published courses", icon: BookOpen, color: "text-green-500", bg: "bg-green-500/10" },
+        { title: "Pending Approvals", value: stats?.pendingApprovals || "0", change: "Requires attention", icon: CircleAlert, color: "text-orange-500", bg: "bg-orange-500/10" },
     ];
+
+    if (loadingStats || loadingPending) return <div className="p-10 text-center">Loading Admin Dashboard...</div>;
 
     return (
         <AdminLayout>
@@ -54,30 +80,46 @@ export default function AdminDashboard() {
                             </Link>
                         </div>
                         <div className="divide-y divide-border">
-                            {[1, 2, 3].map((i) => (
-                                <div key={i} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-secondary/20 transition-colors">
-                                    <div className="flex items-center gap-4">
-                                        <div className="size-12 bg-secondary rounded-lg flex items-center justify-center">
-                                            <BookOpen className="size-6 text-muted-foreground" />
+                            {pendingCourses?.length > 0 ? (
+                                pendingCourses.map((course) => (
+                                    <div key={course._id} className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-secondary/20 transition-colors">
+                                        <div className="flex items-center gap-4">
+                                            <div className="size-12 bg-secondary rounded-lg flex items-center justify-center overflow-hidden">
+                                                {course.thumbnail ? (
+                                                    <img src={course.thumbnail} className="w-full h-full object-cover" alt="" />
+                                                ) : (
+                                                    <BookOpen className="size-6 text-muted-foreground" />
+                                                )}
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-sm">{course.title}</h4>
+                                                <p className="text-xs text-muted-foreground">by <span className="text-foreground font-medium">{course.instructorId?.name || 'Unknown'}</span> • Submitted {new Date(course.createdAt).toLocaleDateString()}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h4 className="font-bold text-sm">Advanced Machine Learning</h4>
-                                            <p className="text-xs text-muted-foreground">by <span className="text-foreground font-medium">Dr. Alan Turing</span> • Submitted 2 days ago</p>
+                                        <div className="flex items-center gap-2">
+                                            <button 
+                                                onClick={() => approveMutation.mutate(course._id)}
+                                                disabled={approveMutation.isPending}
+                                                className="px-3 py-1.5 bg-green-500/10 text-green-500 text-xs font-bold rounded-lg hover:bg-green-500/20 transition-colors disabled:opacity-50"
+                                            >
+                                                {approveMutation.isPending ? '...' : 'Approve'}
+                                            </button>
+                                            <button 
+                                                onClick={() => rejectMutation.mutate(course._id)}
+                                                disabled={rejectMutation.isPending}
+                                                className="px-3 py-1.5 bg-red-500/10 text-red-500 text-xs font-bold rounded-lg hover:bg-red-500/20 transition-colors disabled:opacity-50"
+                                            >
+                                                {rejectMutation.isPending ? '...' : 'Reject'}
+                                            </button>
+                                            <Link to={`/course/${course._id}`} className="px-3 py-1.5 border border-border text-muted-foreground text-xs font-bold rounded-lg hover:bg-secondary transition-colors">
+                                                Review
+                                            </Link>
                                         </div>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <button className="px-3 py-1.5 bg-green-500/10 text-green-500 text-xs font-bold rounded-lg hover:bg-green-500/20 transition-colors">
-                                            Approve
-                                        </button>
-                                        <button className="px-3 py-1.5 bg-red-500/10 text-red-500 text-xs font-bold rounded-lg hover:bg-red-500/20 transition-colors">
-                                            Reject
-                                        </button>
-                                        <button className="px-3 py-1.5 border border-border text-muted-foreground text-xs font-bold rounded-lg hover:bg-secondary transition-colors">
-                                            Review
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
+                                ))
+                            ) : (
+                                <div className="p-10 text-center text-muted-foreground text-sm">No pending approvals.</div>
+                            )}
                         </div>
                     </div>
 

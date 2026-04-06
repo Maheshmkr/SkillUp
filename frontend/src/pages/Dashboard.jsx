@@ -8,11 +8,8 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { getUserProfile } from "@/api/userApi";
 import { getPublishedCourses } from "@/api/courseApi";
+import CourseCard from "@/components/CourseCard";
 
-const recommended = [
-  { title: "Full-Stack React & Next.js", hours: 18, lessons: 45, price: "$89.99", rating: 4.8, thumbnail: "/assets/course-business.jpg" },
-  { title: "Intro to Cloud Architecture", hours: 12, lessons: 30, price: "$124.00", rating: 4.2, thumbnail: "/assets/course-datascience.jpg" },
-];
 
 export default function Dashboard() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -69,11 +66,11 @@ export default function Dashboard() {
               <div className="bg-card p-4 rounded-xl shadow-sm border border-border w-fit">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-accent rounded-lg">
-                    <Flame className="size-5 text-accent-foreground" />
+                    <Flame className={user?.stats?.streak > 0 ? "size-5 text-orange-500 animate-pulse" : "size-5 text-muted-foreground"} />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Day Streak</p>
-                    <p className="text-xl font-bold">12 Days</p>
+                    <p className="text-xl font-bold">{user?.stats?.streak || 0} Days</p>
                   </div>
                 </div>
               </div>
@@ -221,6 +218,28 @@ export default function Dashboard() {
                   )}
                 </div>
               </section>
+              
+              {/* Explore More Courses */}
+              <section className="pt-10 border-t border-border mt-10">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-xl font-bold flex items-center gap-2">
+                    <Sparkles className="size-5 text-primary" /> Discover Your Next Skill
+                  </h2>
+                  <Link to="/explore" className="text-primary text-sm font-semibold hover:underline flex items-center gap-1 group">
+                    Explore All <ChevronRight className="size-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {courses.slice(0, 10).map((course) => (
+                    <CourseCard key={course._id || course.id} course={course} />
+                  ))}
+                </div>
+                {courses.length === 0 && (
+                  <div className="text-center py-10 bg-secondary/20 rounded-xl border border-dashed border-border">
+                    <p className="text-muted-foreground">Stay tuned! We're adding more courses soon.</p>
+                  </div>
+                )}
+              </section>
             </div>
 
             {/* Right Column */}
@@ -229,21 +248,10 @@ export default function Dashboard() {
               <div className="bg-card p-6 rounded-2xl shadow-sm border border-border">
                 <h3 className="font-bold mb-6">Upcoming</h3>
                 <div className="space-y-5">
-                  {[
-                    { month: "Oct", day: "24", title: "Live Q&A Session", desc: "Web Dev Mastery • 2:00 PM" },
-                    { month: "Oct", day: "26", title: "Project Deadline", desc: "UI/UX Basics • Midnight" },
-                  ].map((e) => (
-                    <div key={e.day} className="flex gap-4">
-                      <div className="flex flex-col items-center justify-center size-12 bg-secondary rounded-lg">
-                        <span className="text-[10px] uppercase font-bold text-muted-foreground">{e.month}</span>
-                        <span className="text-lg font-bold">{e.day}</span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-bold">{e.title}</p>
-                        <p className="text-xs text-muted-foreground">{e.desc}</p>
-                      </div>
-                    </div>
-                  ))}
+                  <div className="flex flex-col items-center justify-center py-4 text-center">
+                    <Calendar className="size-8 text-muted-foreground mb-2 opacity-20" />
+                    <p className="text-xs text-muted-foreground">No upcoming live sessions or deadlines.</p>
+                  </div>
                 </div>
               </div>
 

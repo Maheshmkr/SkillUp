@@ -24,3 +24,13 @@ export const rejectCourse = async (id, reason) => {
     const { data } = await axiosInstance.post(`/admin/courses/${id}/reject`, { reason });
     return data;
 };
+
+export const getAdminStats = async () => {
+    const { data } = await axiosInstance.get('/admin/courses/stats');
+    return data;
+};
+
+export const getPendingCourses = async () => {
+    const { data } = await axiosInstance.get('/admin/courses/pending');
+    return data;
+};

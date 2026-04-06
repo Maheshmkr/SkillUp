@@ -29,10 +29,8 @@ export default function Explore() {
 
   const enrolledCourseIds = user?.enrolledCourses?.map(e => (e.course._id || e.course)) || [];
 
-  // Filter courses that are not enrolled
-  const filteredCourses = courses.filter(course =>
-    !enrolledCourseIds.includes(course._id) && !enrolledCourseIds.includes(course.id)
-  );
+  // Filter courses (Show all published courses as requested)
+  const filteredCourses = courses;
 
   // Pagination logic
   const totalPages = Math.ceil(filteredCourses.length / COURSES_PER_PAGE);
@@ -60,7 +58,7 @@ export default function Explore() {
             </nav>
             <h1 className="text-4xl font-extrabold mb-2 tracking-tight">Explore Courses</h1>
             <p className="text-muted-foreground">
-              Join over <span className="text-primary font-bold">120,000+</span> students learning from world-class experts.
+              Join thousands of students learning from world-class experts.
             </p>
           </div>
           <div className="flex items-center gap-2 text-sm font-semibold bg-card p-1.5 rounded-xl border border-border shadow-sm">

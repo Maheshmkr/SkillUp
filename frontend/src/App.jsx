@@ -49,6 +49,19 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+// Dashboard Redirect Component
+const DashboardRedirect = () => {
+  const userInfo = JSON.parse(localStorage.getItem('userInfo') || 'null');
+  if (!userInfo) return <Navigate to="/login" replace />;
+  
+  if (userInfo.role === 'admin') {
+    return <Navigate to="/admin/dashboard" replace />;
+  } else if (userInfo.role === 'instructor') {
+    return <Navigate to="/instructor/dashboard" replace />;
+  }
+  return <Dashboard />;
+};
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -59,7 +72,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
 
           {/* Protected Routes */}
-          <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/" element={<ProtectedRoute><DashboardRedirect /></ProtectedRoute>} />
           <Route path="/explore" element={<ProtectedRoute><Explore /></ProtectedRoute>} />
           <Route path="/course/:id" element={<ProtectedRoute><CourseDetail /></ProtectedRoute>} />
           <Route path="/learn/:courseId" element={<ProtectedRoute><LearningPlayer /></ProtectedRoute>} />

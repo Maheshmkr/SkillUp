@@ -57,7 +57,7 @@ export default function MyCourses() {
 
     const filteredCourses = courses.filter(course => {
         const matchesStatus = filterStatus === 'All Statuses' || course.status === filterStatus;
-        const matchesSearch = course.title.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = (course.title || '').toLowerCase().includes(searchQuery.toLowerCase());
         return matchesStatus && matchesSearch;
     });
     console.log('Filtered Courses:', filteredCourses); // Debugging log

@@ -95,7 +95,19 @@ const createInstructorCourse = asyncHandler(async (req, res) => {
             }
         }
 
-        res.status(201).json(createdCourse);
+        // Refetch and assemble full course object to return to frontend
+        const newModules = await Module.find({ courseId: createdCourse._id }).sort('orderIndex').lean();
+        const newLessons = await Lesson.find({ courseId: createdCourse._id }).sort('orderIndex').lean();
+
+        const assembledModules = newModules.map(m => ({
+            ...m,
+            lessons: newLessons.filter(l => l.moduleId.toString() === m._id.toString())
+        }));
+
+        const courseObj = createdCourse.toObject();
+        courseObj.modules = assembledModules;
+
+        res.status(201).json(courseObj);
     } catch (error) {
         console.error('❌ Error creating course:', error.message);
         res.status(400);
@@ -250,6 +262,39 @@ const getInstructorReviews = asyncHandler(async (req, res) => {
     res.json(formattedReviews);
 });
 
+// @desc    Get all students enrolled in instructor's courses
+// @route   GET /api/instructor/enrollments
+// @access  Private/Instructor
+const getInstructorEnrollments = asyncHandler(async (req, res) => {
+    const Enrollment = require('../models/Enrollment');
+    
+    // 1. Get all courses owned by this instructor
+    const courses = await Course.find({ instructorId: req.user._id }).select('_id title');
+    const courseIds = courses.map(c => c._id);
+
+    // 2. Fetch all enrollments for these courses
+    const enrollments = await Enrollment.find({ courseId: { $in: courseIds } })
+        .populate('userId', 'name email avatar')
+        .populate('courseId', 'title')
+        .sort('-updatedAt')
+        .lean();
+
+    // 3. Format for the frontend
+    const formattedEnrollments = enrollments.map(e => ({
+        id: e._id,
+        name: e.userId?.name || 'Unknown Student',
+        email: e.userId?.email || 'N/A',
+        avatar: e.userId?.avatar,
+        course: e.courseId?.title || 'Deleted Course',
+        courseId: e.courseId?._id,
+        progress: e.progressPercentage || 0,
+        lastActive: e.lastAccessed || e.updatedAt,
+        status: e.isCompleted ? 'Completed' : (e.progressPercentage > 0 ? 'Active' : 'Not Started')
+    }));
+
+    res.json(formattedEnrollments);
+});
+
 module.exports = {
     getInstructorCourses,
     getInstructorCourse,
@@ -257,5 +302,6 @@ module.exports = {
     updateInstructorCourse,
     submitCourseForReview,
     deleteInstructorCourse,
-    getInstructorReviews
+    getInstructorReviews,
+    getInstructorEnrollments
 };

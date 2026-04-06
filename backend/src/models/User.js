@@ -45,6 +45,7 @@ const userSchema = mongoose.Schema(
             coursesCompleted: { type: Number, default: 0 },
             hoursLearned: { type: Number, default: 0 },
             skillsMastered: { type: Number, default: 0 },
+            streak: { type: Number, default: 0 },
         },
         certificates: [
             {

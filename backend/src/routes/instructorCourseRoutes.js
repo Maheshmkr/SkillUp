@@ -8,6 +8,7 @@ const {
     submitCourseForReview,
     deleteInstructorCourse,
     getInstructorReviews,
+    getInstructorEnrollments,
 } = require('../controllers/instructorCourseController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -15,6 +16,7 @@ const { protect } = require('../middleware/authMiddleware');
 router.use(protect);
 
 router.route('/reviews').get(getInstructorReviews); // MUST be before /:id
+router.route('/enrollments').get(getInstructorEnrollments);
 router.route('/').get(getInstructorCourses).post(createInstructorCourse);
 
 router

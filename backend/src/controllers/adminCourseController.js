@@ -62,9 +62,28 @@ const rejectCourse = asyncHandler(async (req, res) => {
     }
 });
 
+// @desc    Get Admin Dashboard Stats
+// @route   GET /api/admin/courses/stats
+// @access  Private/Admin
+const getAdminStats = asyncHandler(async (req, res) => {
+    const User = require('../models/User'); 
+    const totalUsers = await User.countDocuments({ role: 'user' });
+    const activeInstructors = await User.countDocuments({ role: 'instructor' });
+    const totalCourses = await Course.countDocuments({});
+    const pendingApprovals = await Course.countDocuments({ status: 'Pending Review' });
+
+    res.json({
+        totalUsers,
+        activeInstructors,
+        totalCourses,
+        pendingApprovals,
+    });
+});
+
 module.exports = {
     getAllCoursesAdmin,
     getPendingCourses,
     approveCourse,
     rejectCourse,
+    getAdminStats,
 };

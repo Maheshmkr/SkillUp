@@ -10,7 +10,8 @@ const getCourses = asyncHandler(async (req, res) => {
     const limit = parseInt(req.query.limit, 10) || 10;
     const skip = (page - 1) * limit;
 
-    const courses = await Course.find({ status: 'Published' })
+    // Changed from { status: 'Published' } to {} to show ALL 8 courses in the database as requested
+    const courses = await Course.find({})
         .select('title subtitle category price rating students image thumbnail instructorId hours')
         .populate('instructorId', 'name avatar')
         .skip(skip)
